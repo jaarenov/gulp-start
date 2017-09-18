@@ -8,7 +8,8 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     sass = require('gulp-sass'),
     cleanCss = require('gulp-clean-css'),
-    fileinclude = require('gulp-file-include');
+    fileinclude = require('gulp-file-include'),
+    browserSync = require('browser-sync').create();
 
 
 gulp.task('minify', function () {
@@ -19,15 +20,17 @@ gulp.task('minify', function () {
 
 //Style compilation
 gulp.task('style', function () {
-    gulp.src('src/*.scss')
+    gulp.src('src/components/**/*.scss')
         .pipe(sass())
         .pipe(cleanCss())
         .pipe(concat('style.min.css'))
         .pipe(gulp.dest('build/css'))
+        .pipe(browserSync.reload({stream: true}))
 });
 
+//Html include
 gulp.task('html', function() {
-    gulp.src(['index.html'])
+    return gulp.src(['./src/pages/*.html'])
         .pipe(fileinclude({
             prefix: '@@',
             basepath: '@file',
@@ -35,3 +38,30 @@ gulp.task('html', function() {
         }))
         .pipe(gulp.dest('build/html'))
 });
+
+
+//BrowserSync
+gulp.task('browser-sync', function() { // Создаем таск browser-sync
+    browserSync({ // Выполняем browser Sync
+        server: { // Определяем параметры сервера
+            baseDir: 'build' // Директория для сервера - app
+        },
+        notify: false // Отключаем уведомления
+    });
+});
+
+//Watch
+gulp.task('watch', function() {
+    gulp.watch('src/components/**/*.scss', ['style']); // Наблюдение за sass файлами
+    gulp.watch('src/components/**/*.html', ['html'],  browserSync.reload);
+        // gulp.watch('app/*.html', browserSync.reload); // Наблюдение за HTML файлами в корне проекта
+    // gulp.watch('app/js/**/*.js', browserSync.reload); // Наблюдение за JS файлами в папке js
+});
+
+gulp.task('watch:style', ['style'], reload);
+
+// Перезагрузка браузера
+function reload (done) {
+  browserSync.reload();
+  done();
+}
