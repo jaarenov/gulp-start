@@ -36,24 +36,25 @@ gulp.task('html', function() {
             basepath: '@file',
             indent: true
         }))
-        .pipe(gulp.dest('build/html'))
+        .pipe(gulp.dest('build'))
 });
 
 
 //BrowserSync
 gulp.task('browser-sync', function() { // Создаем таск browser-sync
-    browserSync({ // Выполняем browser Sync
+    browserSync.init({ // Выполняем browser Sync
         server: { // Определяем параметры сервера
-            baseDir: 'build' // Директория для сервера - app
+            baseDir: './build' // Директория для сервера - app
         },
         notify: false // Отключаем уведомления
     });
+    // browserSync.watch('src/**/*.*', 'src/**/**/*.*').on("change", browserSync.reload);
 });
 
-//Watch
-gulp.task('watch', function() {
-    gulp.watch('src/components/**/*.scss', ['style']); // Наблюдение за sass файлами
-    gulp.watch('src/components/**/*.html', ['html'],  browserSync.reload);
+// Watch
+gulp.task('watch', ['style', 'browser-sync'], function() {
+    gulp.watch('src/components/**/*.scss', ['style']).on('change', browserSync.reload); // Наблюдение за sass файлами
+    gulp.watch('src/components/**/*.html', ['html']).on('change', browserSync.reload);
         // gulp.watch('app/*.html', browserSync.reload); // Наблюдение за HTML файлами в корне проекта
     // gulp.watch('app/js/**/*.js', browserSync.reload); // Наблюдение за JS файлами в папке js
 });
@@ -65,3 +66,5 @@ function reload (done) {
   browserSync.reload();
   done();
 }
+
+gulp.task('all', ['html', 'style']);
