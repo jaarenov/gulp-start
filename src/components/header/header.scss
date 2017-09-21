@@ -1,6 +1,12 @@
 header {
-  background-color: #f02;
+  display: flex;
+  background-color: #ccc;
   height: 100px;
   width: 100%;
   border: 1px solid black;
+}
+
+header {
+  justify-content: center;
+  align-items: center;
 }
