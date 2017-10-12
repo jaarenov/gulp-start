@@ -1,0 +1,11 @@
+// ! Here you define all your styles
+
+
+// ! Common
+
+@import "./src/sass/common/_reset";
+
+// ! Components
+@import "./src/components/header/header";
+@import "./src/components/footer/footer";
+

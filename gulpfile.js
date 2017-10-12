@@ -22,7 +22,7 @@ gulp.task('js', function () {
 });
 
 //Styles
-gulp.src('src/components/**/*.scss')
+gulp.src('src/sass/bundle.scss')
     .pipe(sass())
     .pipe(autoprefixer(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true }))
     .pipe(cleanCss())
@@ -68,7 +68,7 @@ gulp.task('img', function() {
 
 //Clean build
 gulp.task('clean', function () {
-    return gulp.src('build/css', {read: false})
+    return gulp.src('build/', {read: false})
         .pipe(clean());  //TODO doesn't remove css folder
 });
 
@@ -81,7 +81,7 @@ gulp.task('clear', function () {
 gulp.task('browser-sync', function() {
     browserSync.init({
         server: { // Определяем параметры сервера
-            baseDir: './build' // Директория для сервера - app
+            baseDir: 'build/' // Директория для сервера - app
         },
         notify: false // Отключаем уведомления
     });
@@ -95,4 +95,4 @@ gulp.task('watch', ['html', 'sass', 'js', 'img', 'fonts'], function() {
     gulp.watch('src/js/**/*.js', ['js']).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['clean', 'watch', 'browser-sync']);
+gulp.task('default', ['watch', 'browser-sync']);
